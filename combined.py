@@ -5,14 +5,14 @@ import numpy as np
 import pandas as pd 
 
 #rename to the filename of clip
-cap = cv2.VideoCapture()
+cap = cv2.VideoCapture("r07-01.mp4")
 
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
-prevX = np.zeros(60)
-prevY = np.zeros(60)
+xArr = []
+yArr = []
 distance1 = []
 i = 0
 
@@ -50,80 +50,110 @@ with mp_holistic.Holistic(min_detection_confidence  = 0.5, min_tracking_confiden
             for n in range(0, 68):
                 x = landmarks.part(n).x
                 y = landmarks.part(n).y
+                xArr.append(x)
+                yArr.append(y)
                 cv2.circle(image, (x, y), 4, (255, 0, 0), -1)
 
-            #distances to measure - (52,58), (63,67), (50, 60), (54, 56), (52, 9), (51, 59), (53, 57)
-            
-            x52 = landmarks.part(51).x
-            y52 = landmarks.part(51).y
-            x58 = landmarks.part(57).x
-            y58 = landmarks.part(57).y
-
-            x63 = landmarks.part(62).x
-            y63 = landmarks.part(62).y
-            x67 = landmarks.part(66).x
-            y67 = landmarks.part(66).y
-
-            x50 = landmarks.part(49).x
-            y50 = landmarks.part(49).y
-            x60 = landmarks.part(59).x
-            y60 = landmarks.part(59).y
-
-            x54 = landmarks.part(53).x
-            y54 = landmarks.part(53).y
-            x56 = landmarks.part(55).x
-            y56 = landmarks.part(55).y
-
-            x51 = landmarks.part(50).x
-            y51 = landmarks.part(50).y
-            x59 = landmarks.part(58).x
-            y59 = landmarks.part(58).y
-
-            x53 = landmarks.part(52).x
-            y53 = landmarks.part(52).y
-            x57 = landmarks.part(56).x
-            y57 = landmarks.part(56).y
-
-            x09 = landmarks.part(8).x
-            y09 = landmarks.part(8).y 
+            #distances to measure - (52,58), (63,67), (50, 60), (54, 56), (52, 9), (51, 59), (53, 57), (49, 7), 
+            # (55,11), (57,10), (56,11), (52, 14), (52, 4), (63, 9), (60, 6), (56,12), (53,10), (51, 8)
 
             #52,58
-            xsq = (x52 - x58) ** 2
-            ysq = (y52-y58) ** 2
-            d5258 = round(np.sqrt(xsq + ysq), 3)
+            xsq = (xArr[51] - xArr[57]) ** 2
+            ysq = (yArr[51]-yArr[57]) ** 2
+            d1 = round(np.sqrt(xsq + ysq), 3)
 
             #63, 67
-            xsq = (x63 - x67) ** 2
-            ysq = (y63 - y67) ** 2
-            d6367 = round(np.sqrt(xsq + ysq), 3)
+            xsq = (xArr[62] - xArr[66]) ** 2
+            ysq = (yArr[62]-yArr[66]) ** 2
+            d2 = round(np.sqrt(xsq + ysq), 3)
 
             #50,60
-            xsq = (x50 - x60) ** 2
-            ysq = (y50 - y60) ** 2
-            d5060 = round(np.sqrt(xsq + ysq), 3)
+            xsq = (xArr[49] - xArr[59]) ** 2
+            ysq = (yArr[49]-yArr[59]) ** 2
+            d3 = round(np.sqrt(xsq + ysq), 3)
 
             #54,56
-            xsq = (x54 - x56) ** 2
-            ysq = (y54 - y56) ** 2
-            d5456 = round(np.sqrt(xsq + ysq), 3)
+            xsq = (xArr[53] - xArr[55]) ** 2
+            ysq = (yArr[53]-yArr[55]) ** 2
+            d4 = round(np.sqrt(xsq + ysq), 3)
 
             #52,9
-            xsq = (x52 - x09) ** 2
-            ysq = (y52 - y09) ** 2
-            d5209 = round(np.sqrt(xsq + ysq), 3)
+            xsq = (xArr[51] - xArr[8]) ** 2
+            ysq = (yArr[51]-yArr[8]) ** 2
+            d5 = round(np.sqrt(xsq + ysq), 3)
 
-            #51,59
-            xsq = (x51 - x59) ** 2
-            ysq = (y51 - y59) ** 2
-            d5159 = round(np.sqrt(xsq + ysq), 3)
+            # #51,59
+            xsq = (xArr[51] - xArr[58]) ** 2
+            ysq = (yArr[51]-yArr[58]) ** 2
+            d6 = round(np.sqrt(xsq + ysq), 3)
 
             #53,57
-            xsq = (x53 - x57) ** 2
-            ysq = (y53 - y57) ** 2
-            d5357 = round(np.sqrt(xsq + ysq), 3)
+            xsq = (xArr[52] - xArr[56]) ** 2
+            ysq = (yArr[52]-yArr[56]) ** 2
+            d7 = round(np.sqrt(xsq + ysq), 3)
 
-            distance1.append(((i), d5258, d6367, d5060, d5456, d5209, d5159, d5357))
+            #49,7
+            xsq = (xArr[48] - xArr[6]) ** 2
+            ysq = (yArr[48]-yArr[6]) ** 2
+            d8 = round(np.sqrt(xsq + ysq), 3)
+
+            #55,11
+            xsq = (xArr[54] - xArr[10]) ** 2
+            ysq = (yArr[54]-yArr[10]) ** 2
+            d9 = round(np.sqrt(xsq + ysq), 3)
+
+            #57,10
+            xsq = (xArr[56] - xArr[9]) ** 2
+            ysq = (yArr[56]-yArr[9]) ** 2
+            d10 = round(np.sqrt(xsq + ysq), 3)
+
+            #56,11
+            xsq = (xArr[55] - xArr[10]) ** 2
+            ysq = (yArr[55]-yArr[10]) ** 2
+            d11 = round(np.sqrt(xsq + ysq), 3)
+
+            #52,14
+            xsq = (xArr[51] - xArr[13]) ** 2
+            ysq = (yArr[51]-yArr[13]) ** 2
+            d12 = round(np.sqrt(xsq + ysq), 3)
+
+            #52,4
+            xsq = (xArr[51] - xArr[3]) ** 2
+            ysq = (yArr[51]-yArr[3]) ** 2
+            d13 = round(np.sqrt(xsq + ysq), 3)
+
+            #63,9
+            xsq = (xArr[62] - xArr[8]) ** 2
+            ysq = (yArr[62]-yArr[8]) ** 2
+            d14 = round(np.sqrt(xsq + ysq), 3)
+
+            #60,6
+            xsq = (xArr[59] - xArr[5]) ** 2
+            ysq = (yArr[59]-yArr[5]) ** 2
+            d15 = round(np.sqrt(xsq + ysq), 3)
+
+            #56,12
+            xsq = (xArr[56] - xArr[11]) ** 2
+            ysq = (yArr[56]-yArr[11]) ** 2
+            d16 = round(np.sqrt(xsq + ysq), 3)
+
+            #53,10
+            xsq = (xArr[52] - xArr[9]) ** 2
+            ysq = (yArr[52]-yArr[9]) ** 2
+            d17 = round(np.sqrt(xsq + ysq), 3)
+
+            #51,8
+            xsq = (xArr[50] - xArr[7]) ** 2
+            ysq = (yArr[50]-yArr[7]) ** 2
+            d18 = round(np.sqrt(xsq + ysq), 3)
+
+            distance1.append((i, d1, d2, d3,d4, d5,d6,d7,d8,d9,d10, d11, d12,d13,d14,d15,d16,d17,d18))
+            #distance1.append(((i), d5258, d6367, d5060, d5456, d5209, d5159, d5357))
+            print(xArr)
+            print(yArr)
             i+=1
+            xArr = []
+            yArr = []
         
         if resultHands.multi_hand_landmarks:
             for handLms in resultHands.multi_hand_landmarks:
@@ -142,7 +172,9 @@ with mp_holistic.Holistic(min_detection_confidence  = 0.5, min_tracking_confiden
         if key == 27:
             break
     
-df = pd.DataFrame(distance1, columns=['frame', '(52,58)', '(63,67)', '(50,60)', '(54,56)', '(52,09)', '(51,59)', '(53,57)'])
+df = pd.DataFrame(distance1, columns=['frame', 'distance1', 'distance2', 'distance3', 'distance4', 'distance5'
+                                      ,'distance6', 'distance7', 'distance8', 'distance9', 'distance10', 'distance11', 'distance12', 'distance13'
+                                      , 'distance14', 'distance15', 'distance16', 'distance17', 'distance18'])
 #rename to the filename of clip
 df.to_csv('test.csv',index=False)
 
