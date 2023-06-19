@@ -11,7 +11,7 @@ mpDraw = mp.solutions.drawing_utils
 mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 
-filename = "r02 - 02.3e"
+filename = "r02 - 04.2e"
 
 cap = cv.VideoCapture(filename + ".mp4")
 height = cap.get(cv.CAP_PROP_FRAME_HEIGHT)
@@ -142,7 +142,7 @@ while True:
             ysq = (handsYArr[4] - handsYArr[20]) ** 2
             hd1 = np.sqrt(xsq + ysq)
 
-            xsq = (handsXArr[4] - faceXArr[0]) ** 2
+            xsq = (handsXArr[4] - handsXArr[0]) ** 2
             ysq = (handsYArr[4] - handsYArr[0]) ** 2
             hd2 = np.sqrt(xsq + ysq)
 
