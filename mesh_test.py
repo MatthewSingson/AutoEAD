@@ -11,7 +11,7 @@ mpDraw = mp.solutions.drawing_utils
 mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 
-filename = "r02 - 02.1e"
+filename = "r02 - 02.3e"
 
 cap = cv.VideoCapture(filename + ".mp4")
 height = cap.get(cv.CAP_PROP_FRAME_HEIGHT)
@@ -138,11 +138,58 @@ while True:
                 handsYArr.append(cy)
         
         if fsFace % 2 == 0:
-            xsq = (handsXArr[4] - faceXArr[20]) ** 2
-            ysq = (faceYArr[4] - faceYArr[20]) ** 2
+            xsq = (handsXArr[4] - handsXArr[20]) ** 2
+            ysq = (handsYArr[4] - handsYArr[20]) ** 2
             hd1 = np.sqrt(xsq + ysq)
+
+            xsq = (handsXArr[4] - faceXArr[0]) ** 2
+            ysq = (handsYArr[4] - handsYArr[0]) ** 2
+            hd2 = np.sqrt(xsq + ysq)
+
+            xsq = (handsXArr[20] - handsXArr[0]) ** 2
+            ysq = (handsYArr[20] - handsYArr[0]) ** 2
+            hd3 = np.sqrt(xsq + ysq)
+
+            xsq = (handsXArr[8] - handsXArr[12]) ** 2
+            ysq = (handsYArr[8] - handsYArr[12]) ** 2
+            hd4 = np.sqrt(xsq + ysq)
+
+            xsq = (handsXArr[12] - handsXArr[16]) ** 2
+            ysq = (handsYArr[12] - handsYArr[16]) ** 2
+            hd5 = np.sqrt(xsq + ysq)
     else:
         hd1 = None
+        hd2 = None
+        hd3 = None
+        hd4 = None
+        hd5 = None
+    
+    lm = resultPose.pose_landmarks
+    lmPose = mpPose.PoseLandmark
+
+    if lm is not None:
+        l_shldr_x = int(lm.landmark[lmPose.LEFT_SHOULDER].x * width)
+        l_shldr_y = int(lm.landmark[lmPose.LEFT_SHOULDER].y * height)
+        r_shldr_x = int(lm.landmark[lmPose.RIGHT_SHOULDER].x * width)
+        r_shldr_y = int(lm.landmark[lmPose.RIGHT_SHOULDER].y * height)
+
+        midpointX = (l_shldr_x + r_shldr_x) / 2
+        midpointY = (l_shldr_y + r_shldr_y) / 2
+
+        if fsFace % 2 == 0:
+            xsq = (l_shldr_x - midpointX) ** 2
+            ysq = (l_shldr_y - midpointY) ** 2
+            sd1 = np.sqrt(xsq + ysq)
+
+            xsq = (r_shldr_x - midpointX) ** 2
+            ysq = (r_shldr_y - midpointY) ** 2
+            sd2 = np.sqrt(xsq + ysq)
+    
+    else:
+        l_shldr_x = None
+        l_shldr_y = None
+        r_shldr_x = None
+        r_shldr_y = None
 
             
     fsFace += 1
@@ -154,7 +201,7 @@ while True:
     poseYArr = []
 
     
-    distance1.append((fsFace,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18, hd1))
+    distance1.append((fsFace,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18, hd1, hd2, hd3, hd4, hd5, sd1, sd2))
 
     cv.imshow(filename, image)
     key = cv.waitKey(1)
@@ -164,8 +211,9 @@ while True:
 
 df = pd.DataFrame(distance1, columns=['frame', 'distance1', 'distance2', 'distance3', 'distance4', 'distance5'
                                       ,'distance6', 'distance7', 'distance8', 'distance9', 'distance10', 'distance11', 'distance12', 'distance13'
-                                      , 'distance14', 'distance15', 'distance16', 'distance17', 'distance18', 'hands_dist1'])
+                                      , 'distance14', 'distance15', 'distance16', 'distance17', 'distance18', 'hands_dist1', 'hands_dist2'
+                                      , 'hands_dist3', 'hands_dist4', 'hands_dist5', 'shoulder_dist1', 'shoulder_dist2'])
 #rename to the filename of clip
-df.to_csv(filename + '-test.csv',index=False)
+df.to_csv(filename + '.csv',index=False)
 
 cap.release()
