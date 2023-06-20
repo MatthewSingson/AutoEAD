@@ -11,7 +11,7 @@ mpDraw = mp.solutions.drawing_utils
 mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 
-filename = "r02 - 04.2e"
+filename = "r02 - 47.2e"
 
 cap = cv.VideoCapture(filename + ".mp4")
 height = cap.get(cv.CAP_PROP_FRAME_HEIGHT)
@@ -128,11 +128,30 @@ while True:
             ysq = (faceYArr[291] - faceYArr[379]) ** 2
             d18 = np.sqrt(xsq + ysq)
 
+    else:
+        d1 = None
+        d2 = None
+        d3 = None
+        d4 = None
+        d5 = None
+        d6 = None
+        d7 = None
+        d8 = None
+        d9 = None
+        d10 = None
+        d11 = None
+        d12 = None
+        d13 = None
+        d14 = None
+        d15 = None
+        d16 = None
+        d17 = None
+        d18 = None
+
     if resultHands.multi_hand_landmarks is not None:
         for handLms in resultHands.multi_hand_landmarks:
             for id, lm in enumerate(handLms.landmark):    
-                h, w, c = image.shape
-                cx, cy = int(lm.x * w), int(lm.y * h)
+                cx, cy = int(lm.x * width), int(lm.y * height)
                 mpDraw.draw_landmarks(image, handLms, mpHands.HAND_CONNECTIONS)
                 handsXArr.append(cx)
                 handsYArr.append(cy)
