@@ -16,6 +16,9 @@ def mesh_test_main(vid_filename):
     cap = cv.VideoCapture(filename + ".mp4")
     height = cap.get(cv.CAP_PROP_FRAME_HEIGHT)
     width = cap.get(cv.CAP_PROP_FRAME_WIDTH)
+    fps = cap.get(cv.CAP_PROP_FPS)
+
+    print(f"Height: {height} || Width: {width} || FPS: {fps}")
 
     faceXArr = []
     faceYArr = []
@@ -26,7 +29,11 @@ def mesh_test_main(vid_filename):
     distance1 = []
 
     fsFace = 0
-    fsHands = 0
+    listhands = [12, 15, 11, 17, 81, 181, 312, 314, 83, 175, 176, 377, 405, 400, 320, 335, 426, 430, 32, 216, 
+                 352, 152, 123, 427, 365, 170, 58, 148, 291, 379]
+    handslist = [0, 4, 20, 8, 16]
+
+    print(f"Length of ListHands: {len(listhands)}")
 
     while True:
         ret, image = cap.read()
@@ -46,7 +53,11 @@ def mesh_test_main(vid_filename):
                     pY = int(point.y * height)
                     faceYArr.append(pY)
                     faceXArr.append(pX)
-                    cv.circle(image, (pX, pY), 3, (100, 100, 0), -1)
+                for i in listhands:
+                    point = facial_landmarks.landmark[i]
+                    pX = int(point.x * width)
+                    pY = int(point.y * height)
+                    cv.circle(image, (pX, pY), 5, (255, 255, 0), -1)
                 
             if fsFace % 2 == 0:
 
@@ -146,9 +157,12 @@ def mesh_test_main(vid_filename):
             for handLms in resultHands.multi_hand_landmarks:
                 for id, lm in enumerate(handLms.landmark):    
                     cx, cy = int(lm.x * width), int(lm.y * height)
-                    mpDraw.draw_landmarks(image, handLms, mpHands.HAND_CONNECTIONS)
                     handsXArr.append(cx)
                     handsYArr.append(cy)
+                for i in handslist:
+                    cx, cy = int(handsXArr[i]), int(handsYArr[i])
+                    cv.circle(image, (cx, cy), 4, (255, 0, 255), -1)
+
             
             if fsFace % 2 == 0:
                 xsq = (handsXArr[4] - handsXArr[20]) ** 2
@@ -186,8 +200,12 @@ def mesh_test_main(vid_filename):
             r_shldr_x = int(lm.landmark[lmPose.RIGHT_SHOULDER].x * width)
             r_shldr_y = int(lm.landmark[lmPose.RIGHT_SHOULDER].y * height)
 
-            midpointX = (l_shldr_x + r_shldr_x) / 2
-            midpointY = (l_shldr_y + r_shldr_y) / 2
+            midpointX = int((l_shldr_x + r_shldr_x) / 2)
+            midpointY = int((l_shldr_y + r_shldr_y) / 2)
+
+            cv.circle(image, (l_shldr_x, l_shldr_y), 5, (0, 255, 0), -1)
+            cv.circle(image, (r_shldr_x, r_shldr_y), 5, (0, 255, 0), -1)
+            cv.circle(image, (midpointX, midpointY), 5, (0, 255, 0), -1)
 
             if fsFace % 2 == 0:
                 xsq = (l_shldr_x - midpointX) ** 2
