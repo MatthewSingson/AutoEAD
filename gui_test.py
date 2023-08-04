@@ -24,15 +24,22 @@ def start_facial_extraction():
 
 def classify():
     filename = csvEntry.get()
-    messagebox.showinfo('Classification', f"Entry : {filename}")
+    value = var.get()
 
-def rbClassification():
-    pass
+    if value == 1:
+        classification = J48_DT.decision_tree_eating(filename)
+        messagebox.showinfo('Classification', f"Entry : {classification}")
+    elif value == 2:
+        #for drinking instead
+        classification = J48_DT.decision_tree_eating(filename)
+
 
 window = tk.Tk()
 
 window.geometry("720x720")
 window.title("AutoEAD")
+
+var = tk.IntVar(window, "1")
 
 
 fileInputFrame = tk.Frame(window, padx=4, pady=4)
@@ -58,8 +65,10 @@ classificationFrame = tk.Frame(window, pady = 40)
 classificationFrame.columnconfigure(0, weight = 1)
 classificationFrame.columnconfigure(1, weight = 1)
 
-eatCheck = tk.Radiobutton(classificationFrame, text= "Eating")
-drinkCheck = tk.Radiobutton(classificationFrame, text = "Drinking")
+eatCheck = tk.Radiobutton(classificationFrame, text= "Eating",
+                          variable=var, value=1)
+drinkCheck = tk.Radiobutton(classificationFrame, text = "Drinking",
+                            variable=var, value=2)
 
 eatCheck.grid(row = 0, column=1, sticky=tk.W + tk.E)
 drinkCheck.grid(row = 1, column=1, sticky=tk.W + tk.E)
